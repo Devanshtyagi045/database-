@@ -1,0 +1,33 @@
+use products
+select*from products
+-- Get the top 10 most expensive products
+SELECT product_id, product_name, price
+FROM products
+WHERE price > 50
+ORDER BY price DESC
+LIMIT 10;
+
+-- Find total sales amount per customer
+SELECT c.customer_id, c.first_name, c.last_name, SUM(o.total_amount) AS total_spent
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.first_name, c.last_name
+ORDER BY total_spent DESC;
+
+
+-- INNER JOIN: Orders with product details
+SELECT o.order_id, p.product_name, p.price, o.quantity
+FROM orders o
+INNER JOIN products p ON o.product_id = p.product_id;
+
+-- View for top customers
+CREATE VIEW top_customers AS
+SELECT c.customer_id, c.first_name, c.last_name, SUM(o.total_amount) AS total_spent
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.first_name, c.last_name
+ORDER BY total_spent DESC;
+
+-- Create index to speed up order lookups by customer
+CREATE INDEX idx_orders_customer_id ON orders(customer_id);
+
